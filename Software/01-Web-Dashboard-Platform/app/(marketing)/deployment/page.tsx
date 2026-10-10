@@ -7,6 +7,7 @@ import { SectionHeading } from "@/components/marketing/SectionHeading";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CORPUS_CHRISTI_CLUSTERS, AWGS_PER_CLUSTER } from "@/data/corpus-christi/clusters";
+import { LiveWeatherCard } from "@/components/weather/LiveWeatherCard";
 
 const LAT_RANGE = [27.62, 27.86] as const;
 const LON_RANGE = [-97.58, -97.27] as const;
@@ -86,6 +87,10 @@ export default function DeploymentPage() {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      <div className="mt-10">
+        <LiveWeatherCard />
       </div>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-5">

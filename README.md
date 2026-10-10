@@ -38,7 +38,9 @@ coordination of compatible AWG systems.
 ## Technologies Used
 
 **Web Dashboard Platform** — Next.js (App Router), React, TypeScript,
-Tailwind CSS, shadcn/ui, Recharts, Zustand, Vitest, ESLint.
+Tailwind CSS, shadcn/ui, Recharts, Zustand, Vitest, ESLint, and a live
+[OpenWeatherMap](https://openweathermap.org/api) integration for real
+Corpus Christi conditions.
 
 **Gateway Software** (Raspberry Pi) — Node.js, TypeScript, `modbus-serial`
 (Modbus TCP/RTU), `mqtt`, `better-sqlite3`, Express, Zod, Vitest, ESLint.
@@ -89,9 +91,12 @@ test instructions.
 - Stand up the cloud ingestion endpoint so real (measured) telemetry from
   the Gateway Software flows into the same dashboard that currently shows
   simulated data.
-- Replace the synthetic weather model with a real forecast API, and the
-  simplified AWG production curve with a validated manufacturer
-  performance table.
+- ~~Replace the synthetic weather model with a real forecast API~~ —
+  done for display purposes (OpenWeatherMap, live on `/deployment` and
+  `/simulation`); still open: feed it into the actual 20-AWG fleet
+  simulation and the AI Optimization Center's 24-hour schedule.
+- Replace the simplified AWG production curve with a validated
+  manufacturer performance table.
 - Add a mixed-integer optimization solver as an alternative to the current
   rule-based scheduler, with the UI showing which method produced a given
   schedule.

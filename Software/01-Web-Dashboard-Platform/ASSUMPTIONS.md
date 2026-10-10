@@ -107,8 +107,19 @@ All editable live via `/dashboard/financials`.
 
 All editable live via `/desalination`.
 
+## Live weather integration (OpenWeatherMap)
+
+| Assumption | Default | File |
+|---|---|---|
+| Query location | Downtown Corpus Christi cluster coordinates (27.7676°N, -97.3964°W) | `lib/weather/openWeatherMap.ts` (`CORPUS_CHRISTI_COORDS`) |
+| Units | Metric (°C), matching every other temperature in this codebase | same |
+| Endpoints | OpenWeatherMap "Current Weather Data" and "5 Day / 3 Hour Forecast" (free tier) | same |
+
+This is real measured/forecast data, not a planning assumption — it requires
+`OPENWEATHER_API_KEY` and is clearly separate from the synthetic weather
+model that drives the core fleet simulation (see ROADMAP.md).
+
 ## What this document does NOT cover
 
-Manufacturer-specific AWG performance curves, real weather-API integration
-parameters, and real hardware calibration constants — none of these exist
-yet in this codebase. See ROADMAP.md.
+Manufacturer-specific AWG performance curves and real hardware calibration
+constants — neither exists yet in this codebase. See ROADMAP.md.

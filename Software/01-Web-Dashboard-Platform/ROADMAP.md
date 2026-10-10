@@ -39,12 +39,22 @@ change.
 
 ## Real weather / forecast API
 
-`lib/simulation/weather.ts`'s `syntheticWeatherAt` and
-`generateSyntheticForecast` are the seam. Both return the same
-`WeatherConditions` shape a real API (NWS, Open-Meteo, etc.) would need to
-produce; swapping the implementation behind that same signature is the
-whole job. The `dataSource: "forecast"` label already exists in the type
-system for this.
+**Partially done.** `lib/weather/openWeatherMap.ts` + `app/api/weather/route.ts`
+now fetch real current conditions and a 5-day/3-hour forecast for Corpus
+Christi from [OpenWeatherMap](https://openweathermap.org/api), surfaced via
+`LiveWeatherCard` (`/deployment`) and a "Use real weather" button
+(`/simulation`). This is additive — it requires `OPENWEATHER_API_KEY` and
+fails gracefully (503, not a crash) without one, and it does not touch
+`lib/simulation/weather.ts`: the core 20-AWG fleet simulation still runs
+entirely on its synthetic model and needs zero external API keys, per the
+project's design principle.
+
+Still open: actually driving the fleet simulation's weather from this live
+feed (today it only feeds the single-AWG sandbox and the display card),
+and using the forecast data in the AI Optimization Center's 24-hour
+schedule instead of `generateSyntheticForecast`. `syntheticWeatherAt` and
+`generateSyntheticForecast` remain the seam for that — both return the same
+`WeatherConditions` shape this real integration would need to produce.
 
 ## Mathematical (MILP) optimization solver
 

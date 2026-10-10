@@ -2,16 +2,20 @@
 
 import { useMemo } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceDot } from "recharts";
+import { Cloud } from "lucide-react";
 import { SectionHeading } from "@/components/marketing/SectionHeading";
 import { WeatherControlPanel } from "@/components/simulation/WeatherControlPanel";
 import { DataSourceBadge } from "@/components/shared/DataSourceBadge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useAwgSandbox } from "@/lib/sandbox/useAwgSandbox";
+import { useLiveWeather } from "@/lib/weather/useLiveWeather";
 import { estimateWaterProductionRate } from "@/lib/physics/water";
 import { AQUALOOP_STANDARD_PROFILE, ratedProductionLPerDay } from "@/lib/equipment/awgProfiles";
 
 export default function SimulationPage() {
   const { controls, setControls, derived } = useAwgSandbox();
+  const liveWeather = useLiveWeather();
 
   const humidityCurve = useMemo(() => {
     const ratedLPerDay = ratedProductionLPerDay(AQUALOOP_STANDARD_PROFILE);
@@ -32,7 +36,31 @@ export default function SimulationPage() {
       />
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[320px_1fr]">
-        <WeatherControlPanel controls={controls} onChange={setControls} />
+        <div className="space-y-3">
+          <WeatherControlPanel controls={controls} onChange={setControls} />
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full"
+            disabled={!liveWeather.current}
+            onClick={() => {
+              if (!liveWeather.current) return;
+              setControls({
+                ...controls,
+                temperatureC: liveWeather.current.temperatureC,
+                relativeHumidityPct: liveWeather.current.relativeHumidityPct,
+                cloudCoverFactor: liveWeather.current.cloudCoverFactor,
+              });
+            }}
+          >
+            <Cloud className="h-4 w-4" />
+            {liveWeather.loading
+              ? "Loading live Corpus Christi weather…"
+              : liveWeather.current
+                ? `Use real weather (${liveWeather.current.temperatureC.toFixed(0)}°C, ${liveWeather.current.relativeHumidityPct.toFixed(0)}% RH)`
+                : "Live weather unavailable"}
+          </Button>
+        </div>
 
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">

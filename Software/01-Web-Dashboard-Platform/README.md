@@ -36,6 +36,12 @@ npm run start     # run the production build
 Requires Node.js 20+ (built against Node 26) and no environment variables —
 the app runs entirely client-side/server-rendered with in-memory state.
 
+Optionally, copy `.env.example` to `.env.local` and set `OPENWEATHER_API_KEY`
+(free key at https://openweathermap.org/api) to enable the live Corpus
+Christi weather card on `/deployment` and the "Use real weather" button on
+`/simulation`. Everything else — including the entire 20-AWG fleet
+simulation — works with zero API keys either way.
+
 ## Using the simulator
 
 - **Public site** (`/`, `/how-it-works`, `/simulation`, `/hybrid-energy`,
@@ -63,6 +69,10 @@ the app runs entirely client-side/server-rendered with in-memory state.
   shown honestly.
 - **Reports** (`/dashboard/reports`): exports the current fleet snapshot and
   simulation history as CSV.
+- **Live weather** (`/deployment`, `/simulation`): real current + forecast
+  conditions for Corpus Christi via OpenWeatherMap, clearly labeled
+  "Measured"/"Forecast" and kept separate from the simulation's own
+  synthetic weather model (see `lib/weather/openWeatherMap.ts`).
 
 ## Running tests
 
