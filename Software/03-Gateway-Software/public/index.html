@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AquaLoop AI — On-Site Monitor</title>
+<style>
+  :root {
+    --bg: #071923; --card: #142f3c; --fg: #f4fafc; --muted: #9cb6c3;
+    --water: #49b7ff; --solar: #f5c451; --gas: #f29a55; --battery: #a99bff;
+    --success: #48d597; --warning: #f0b45c; --critical: #f16f75;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font-family: system-ui, sans-serif; }
+  header { padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1d3f4d; }
+  header h1 { font-size: 1.1rem; margin: 0; }
+  #status-pill { font-size: 0.8rem; padding: 0.25rem 0.6rem; border-radius: 999px; background: #1d3f4d; }
+  main { padding: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .card { background: var(--card); border-radius: 12px; padding: 1rem; }
+  .card .label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
+  .card .value { font-size: 1.6rem; font-weight: 600; margin-top: 0.25rem; }
+  .card .sub { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+  #alerts { grid-column: 1 / -1; }
+  .alert { padding: 0.6rem 0.8rem; border-radius: 8px; margin-top: 0.5rem; font-size: 0.85rem; }
+  .alert.critical { background: rgba(241,111,117,0.15); border: 1px solid rgba(241,111,117,0.4); }
+  .alert.warning { background: rgba(240,180,92,0.15); border: 1px solid rgba(240,180,92,0.4); }
+  .alert.info { background: rgba(156,182,195,0.1); border: 1px solid #1d3f4d; }
+  .stale { color: var(--critical); }
+</style>
+</head>
+<body>
+<header>
+  <h1>AquaLoop AI — On-Site Monitor (Demonstration environment)</h1>
+  <span id="status-pill">Connecting…</span>
+</header>
+<main>
+  <div class="card"><div class="label">Tank level</div><div class="value" id="tank-level">—</div><div class="sub" id="tank-source">—</div></div>
+  <div class="card"><div class="label">Water temperature</div><div class="value" id="water-temp">—</div></div>
+  <div class="card"><div class="label">TDS</div><div class="value" id="tds">—</div></div>
+  <div class="card"><div class="label">Flow rate (combined)</div><div class="value" id="flow">—</div></div>
+  <div class="card"><div class="label">Battery SOC</div><div class="value" id="battery-soc">—</div></div>
+  <div class="card"><div class="label">Solar power</div><div class="value" id="solar-power">—</div></div>
+  <div class="card"><div class="label">Generator</div><div class="value" id="generator">—</div></div>
+  <div class="card"><div class="label">AWG compressor</div><div class="value" id="compressor">—</div></div>
+  <div class="card"><div class="label">Current decision</div><div class="value" id="decision" style="font-size:1rem;">—</div></div>
+  <div class="card" id="alerts"><div class="label">Alerts</div><div id="alerts-list">No alerts.</div></div>
+</main>
+<script>
+  async function refresh() {
+    try {
+      const statusRes = await fetch('/api/status');
+      const { snapshot, decision } = await statusRes.json();
+      const pill = document.getElementById('status-pill');
+
+      if (!snapshot) { pill.textContent = 'Waiting for first reading…'; return; }
+
+      const stale = snapshot.sensorsStale || snapshot.plcStale;
+      pill.textContent = stale ? '⚠ Data stale' : '● Live';
+      pill.className = stale ? 'stale' : '';
+
+      const plc = snapshot.plc;
+      const sensors = snapshot.sensors;
+
+      document.getElementById('tank-level').textContent = plc ? plc.tankLevelPct.toFixed(0) + '%' : '—';
+      document.getElementById('tank-source').textContent = 'PLC reading' + (sensors ? ` · ESP32: ${sensors.water.tankLevelPct.toFixed(0)}%` : '');
+      document.getElementById('water-temp').textContent = sensors ? sensors.water.temperatureC.toFixed(1) + ' °C' : '—';
+      document.getElementById('tds').textContent = sensors ? sensors.water.tdsPpm.toFixed(0) + ' ppm' : '—';
+      document.getElementById('flow').textContent = sensors ? (sensors.water.flowRate1LitersPerMin + sensors.water.flowRate2LitersPerMin).toFixed(2) + ' L/min' : '—';
+      document.getElementById('battery-soc').textContent = plc ? plc.batterySocPct.toFixed(0) + '%' : '—';
+      document.getElementById('solar-power').textContent = plc ? plc.solarArrayPowerKw.toFixed(2) + ' kW' : '—';
+      document.getElementById('generator').textContent = plc ? (plc.generatorRunning ? 'Running' : 'Idle') : '—';
+      document.getElementById('compressor').textContent = plc ? (plc.awgCompressorRunning ? `Running (${plc.awgCompressorPowerKw.toFixed(2)} kW)` : 'Stopped') : '—';
+      document.getElementById('decision').textContent = decision ? decision.explanation : 'No decision yet.';
+
+      const alertsRes = await fetch('/api/alerts?limit=10');
+      const { alerts } = await alertsRes.json();
+      const list = document.getElementById('alerts-list');
+      list.innerHTML = alerts.length === 0
+        ? 'No alerts.'
+        : alerts.map(a => `<div class="alert ${a.severity}">${a.message}</div>`).join('');
+    } catch (err) {
+      document.getElementById('status-pill').textContent = '⚠ Gateway unreachable';
+      console.error(err);
+    }
+  }
+  refresh();
+  setInterval(refresh, 5000);
+</script>
+</body>
+</html>

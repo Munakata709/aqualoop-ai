@@ -1,0 +1,18 @@
+[Unit]
+Description=AquaLoop AI Raspberry Pi gateway
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/aqualoop-gateway
+EnvironmentFile=/opt/aqualoop-gateway/.env
+ExecStart=/usr/bin/node /opt/aqualoop-gateway/dist/index.js
+Restart=on-failure
+RestartSec=5
+User=aqualoop
+# Tighten once the real device paths (serial PLC adapter, etc.) are known:
+# ProtectSystem=strict, ReadWritePaths=/opt/aqualoop-gateway/data, etc.
+
+[Install]
+WantedBy=multi-user.target

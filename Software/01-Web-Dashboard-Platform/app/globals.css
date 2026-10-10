@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+:root {
+  /* --- AquaLoop AI brand palette (dark, default) --- */
+  --background: #071923;
+  --foreground: #f4fafc;
+  --card: #142f3c;
+  --card-foreground: #f4fafc;
+  --popover: #142f3c;
+  --popover-foreground: #f4fafc;
+  --primary: #3dd6c6;
+  --primary-foreground: #071923;
+  --secondary: #102633;
+  --secondary-foreground: #f4fafc;
+  --muted: #102633;
+  --muted-foreground: #9cb6c3;
+  --accent: #49b7ff;
+  --accent-foreground: #071923;
+  --destructive: #f16f75;
+  --destructive-foreground: #071923;
+  --border: #1d3f4d;
+  --input: #1d3f4d;
+  --ring: #3dd6c6;
+
+  /* --- Domain colors used throughout the energy/water diagrams --- */
+  --aqualoop-water: #49b7ff;
+  --aqualoop-solar: #f5c451;
+  --aqualoop-gas: #f29a55;
+  --aqualoop-battery: #a99bff;
+  --aqualoop-success: #48d597;
+  --aqualoop-warning: #f0b45c;
+  --aqualoop-critical: #f16f75;
+
+  --radius: 0.75rem;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #f2f8fa;
+    --foreground: #0b222d;
+    --card: #ffffff;
+    --card-foreground: #0b222d;
+    --popover: #ffffff;
+    --popover-foreground: #0b222d;
+    --primary: #0c9c8d;
+    --primary-foreground: #ffffff;
+    --secondary: #e4eef2;
+    --secondary-foreground: #0b222d;
+    --muted: #e4eef2;
+    --muted-foreground: #4f6b76;
+    --accent: #1e8fd6;
+    --accent-foreground: #ffffff;
+    --destructive: #d6464d;
+    --destructive-foreground: #ffffff;
+    --border: #d7e4e9;
+    --input: #d7e4e9;
+    --ring: #0c9c8d;
+
+    --aqualoop-water: #1e8fd6;
+    --aqualoop-solar: #b8862f;
+    --aqualoop-gas: #c5713a;
+    --aqualoop-battery: #6e5fd1;
+    --aqualoop-success: #1e9d6b;
+    --aqualoop-warning: #b8792a;
+    --aqualoop-critical: #d6464d;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-water: var(--aqualoop-water);
+  --color-solar: var(--aqualoop-solar);
+  --color-gas: var(--aqualoop-gas);
+  --color-battery: var(--aqualoop-battery);
+  --color-success: var(--aqualoop-success);
+  --color-warning: var(--aqualoop-warning);
+  --color-critical: var(--aqualoop-critical);
+
+  --font-sans: var(--font-inter);
+  --radius: var(--radius);
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.data-source-badge {
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
