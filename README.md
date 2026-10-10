@@ -59,14 +59,14 @@ test instructions.
 ## Challenges We Ran Into
 
 - **Where to draw the safety line.** The hardest design decision wasn't
-  technical — it was deciding that the Gateway Software may only ever
+  technical: it was deciding that the Gateway Software may only ever
   write *advisory* requests to the PLC, never a real actuator command. That
   meant designing a full register map and interlock spec before writing a
   single line of control code, rather than just wiring things up.
 - **Avoiding fabricated results.** It would have been easy to hardcode an
   impressive "AI saves 23% energy!" number. Instead, every efficiency claim
-  in the platform is computed live from an explicit baseline-vs-optimized
-  comparison using the same seed — if the strategy doesn't actually help in
+  in the platform is computed live from an explicit baseline vs. optimized
+  comparison using the same seed. If the strategy doesn't actually help in
   a given scenario, the UI says so.
 - **No hardware in the loop.** This environment had no ESP32 toolchain and
   no physical PLC/AWG to test against, so the firmware is written but
@@ -76,7 +76,7 @@ test instructions.
 - **Framework churn.** Next.js 16's new Cache Components feature rejected
   non-deterministic values (`new Date()`) during prerendering, and the
   shadcn/ui registry we used is built on Base UI rather than Radix, so
-  `asChild` doesn't exist — both cost debugging time before we found the
+  `asChild` doesn't exist. Both cost debugging time before we found the
   right pattern.
 - **Scoping a 32-hour build.** The original hardware vision (20 machines,
   full physical deployment) had to be explicitly reframed as a software
